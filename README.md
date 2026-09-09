@@ -4,6 +4,24 @@
     SPDX-License-Identifier: BSD-2-Clause
 -->
 
+
+#### Initially Supported boards
+1. imx8mm_evk
+1. imx8mp_evk
+1. imx8mq_evk
+1. imx8mp_iotgate
+1. kria_k26
+1. maaxboard
+1. odroidc2
+1. odroidc4
+1. qemu_virt_aarch64 (CURRENTLY ONLY SUPPORTS THIS)
+1. qemu_virt_riscv64
+1. rock3b
+1. star64
+1. x86_64_generic
+1. rpi4b_1gb
+1. zcu102
+
 # Network echo server
 
 This example demonstrates how the [networking
@@ -53,19 +71,7 @@ To learn more about the benchmarking architecture and setup, see the
 ## Building
 
 The following platforms are supported:
-
-* imx8mm_evk
-* imx8mp_evk
-* imx8mp_iotgate
-* imx8mq_evk
-* maaxboard
-* odroidc2
-* odroidc4
 * qemu_virt_aarch64
-* qemu_virt_riscv64
-* rock3b
-* star64
-* x86_64_generic (only QEMU right now)
 
 To compile the system image, run:
 
