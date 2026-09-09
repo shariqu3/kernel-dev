@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<system>
+    <memory_region name="cycle_counters0" size="0x1000" />
+    <memory_region name="pl011@9000000/drivers/serial/arm/regs" size="0x1000" phys_addr="0x9000000" />
+    <memory_region name="pl011@9000000/serial/queue/serial_driver/serial_virt_tx" size="0x1000" />
+    <memory_region name="pl011@9000000/serial/data/serial_driver/serial_virt_tx" size="0x20000" />
+    <memory_region name="pl011@9000000/serial/queue/serial_virt_tx/client0" size="0x1000" />
+    <memory_region name="pl011@9000000/serial/data/serial_virt_tx/client0" size="0x10000" />
+    <memory_region name="pl011@9000000/serial/queue/serial_virt_tx/client1" size="0x1000" />
+    <memory_region name="pl011@9000000/serial/data/serial_virt_tx/client1" size="0x10000" />
+    <memory_region name="pl011@9000000/serial/queue/serial_virt_tx/bench0" size="0x1000" />
+    <memory_region name="pl011@9000000/serial/data/serial_virt_tx/bench0" size="0x10000" />
+    <memory_region name="virtio_mmio@a000000/drivers/network/virtio/mmio/regs" size="0x1000" phys_addr="0xa000000" />
+    <memory_region name="virtio_mmio@a000000/drivers/network/virtio/mmio/hw_ring_buffer" size="0x10000" phys_addr="0x5fff0000" />
+    <memory_region name="virtio_mmio@a000000/net/queue/ethernet_driver/net_virt_rx/free" size="0x3000" />
+    <memory_region name="virtio_mmio@a000000/net/queue/ethernet_driver/net_virt_rx/active" size="0x3000" />
+    <memory_region name="virtio_mmio@a000000/net/rx/data/device" size="0x100000" phys_addr="0x5fef0000" />
+    <memory_region name="virtio_mmio@a000000/net/rx/virt_metadata" size="0x1000" />
+    <memory_region name="virtio_mmio@a000000/net/queue/ethernet_driver/net_virt_tx/free" size="0x5000" />
+    <memory_region name="virtio_mmio@a000000/net/queue/ethernet_driver/net_virt_tx/active" size="0x5000" />
+    <memory_region name="virtio_mmio@a000000/net/queue/net_virt_rx/client0_net_copier/free" size="0x3000" />
+    <memory_region name="virtio_mmio@a000000/net/queue/net_virt_rx/client0_net_copier/active" size="0x3000" />
+    <memory_region name="virtio_mmio@a000000/net/queue/client0_net_copier/client0/free" size="0x3000" />
+    <memory_region name="virtio_mmio@a000000/net/queue/client0_net_copier/client0/active" size="0x3000" />
+    <memory_region name="virtio_mmio@a000000/net/rx/data/client/client0" size="0x100000" />
+    <memory_region name="virtio_mmio@a000000/net/queue/net_virt_tx/client0/free" size="0x3000" />
+    <memory_region name="virtio_mmio@a000000/net/queue/net_virt_tx/client0/active" size="0x3000" />
+    <memory_region name="virtio_mmio@a000000/net/tx/data/client/client0" size="0x100000" phys_addr="0x5fdf0000" />
+    <memory_region name="virtio_mmio@a000000/net/queue/net_virt_rx/client1_net_copier/free" size="0x3000" />
+    <memory_region name="virtio_mmio@a000000/net/queue/net_virt_rx/client1_net_copier/active" size="0x3000" />
+    <memory_region name="virtio_mmio@a000000/net/queue/client1_net_copier/client1/free" size="0x3000" />
+    <memory_region name="virtio_mmio@a000000/net/queue/client1_net_copier/client1/active" size="0x3000" />
+    <memory_region name="virtio_mmio@a000000/net/rx/data/client/client1" size="0x100000" />
+    <memory_region name="virtio_mmio@a000000/net/queue/net_virt_tx/client1/free" size="0x3000" />
+    <memory_region name="virtio_mmio@a000000/net/queue/net_virt_tx/client1/active" size="0x3000" />
+    <memory_region name="virtio_mmio@a000000/net/tx/data/client/client1" size="0x100000" phys_addr="0x5fcf0000" />
+    <memory_region name="virtio_mmio@a000000/net/lib_sddf_lwip/client0" size="0xe000" />
+    <memory_region name="virtio_mmio@a000000/net/lib_sddf_lwip/client1" size="0xe000" />
+    <protection_domain name="bench_idle0" priority="1" cpu="0">
+        <program_image path="idle0.elf" />
+        <map mr="cycle_counters0" vaddr="0x5000000" perms="rw" cached="true" />
+    </protection_domain>
+    <protection_domain name="bench0" priority="254" cpu="0">
+        <program_image path="benchmark0.elf" />
+        <map mr="pl011@9000000/serial/queue/serial_virt_tx/bench0" vaddr="0x20000000" perms="rw" />
+        <map mr="pl011@9000000/serial/data/serial_virt_tx/bench0" vaddr="0x20001000" perms="rw" />
+        <protection_domain name="serial_driver" id="0" priority="100" cpu="0">
+            <program_image path="serial_driver.elf" />
+            <map mr="pl011@9000000/drivers/serial/arm/regs" vaddr="0x20000000" perms="rw" cached="false" />
+            <map mr="pl011@9000000/serial/queue/serial_driver/serial_virt_tx" vaddr="0x20001000" perms="rw" />
+            <map mr="pl011@9000000/serial/data/serial_driver/serial_virt_tx" vaddr="0x20002000" perms="rw" />
+            <irq irq="33" id="0" trigger="level" />
+        </protection_domain>
+        <protection_domain name="serial_virt_tx" id="1" priority="99" cpu="0">
+            <program_image path="serial_virt_tx.elf" />
+            <map mr="pl011@9000000/serial/queue/serial_driver/serial_virt_tx" vaddr="0x20000000" perms="rw" />
+            <map mr="pl011@9000000/serial/data/serial_driver/serial_virt_tx" vaddr="0x20001000" perms="rw" />
+            <map mr="pl011@9000000/serial/queue/serial_virt_tx/client0" vaddr="0x20021000" perms="rw" />
+            <map mr="pl011@9000000/serial/data/serial_virt_tx/client0" vaddr="0x20022000" perms="rw" />
+            <map mr="pl011@9000000/serial/queue/serial_virt_tx/client1" vaddr="0x20032000" perms="rw" />
+            <map mr="pl011@9000000/serial/data/serial_virt_tx/client1" vaddr="0x20033000" perms="rw" />
+            <map mr="pl011@9000000/serial/queue/serial_virt_tx/bench0" vaddr="0x20043000" perms="rw" />
+            <map mr="pl011@9000000/serial/data/serial_virt_tx/bench0" vaddr="0x20044000" perms="rw" />
+        </protection_domain>
+        <protection_domain name="ethernet_driver" id="2" priority="101" budget="100" period="400" cpu="0">
+            <program_image path="eth_driver.elf" />
+            <map mr="virtio_mmio@a000000/drivers/network/virtio/mmio/regs" vaddr="0x20000000" perms="rw" cached="false" />
+            <map mr="virtio_mmio@a000000/drivers/network/virtio/mmio/hw_ring_buffer" vaddr="0x20001000" perms="rw" cached="true" />
+            <map mr="virtio_mmio@a000000/net/queue/ethernet_driver/net_virt_rx/free" vaddr="0x20011000" perms="rw" />
+            <map mr="virtio_mmio@a000000/net/queue/ethernet_driver/net_virt_rx/active" vaddr="0x20014000" perms="rw" />
+            <map mr="virtio_mmio@a000000/net/queue/ethernet_driver/net_virt_tx/free" vaddr="0x20017000" perms="rw" />
+            <map mr="virtio_mmio@a000000/net/queue/ethernet_driver/net_virt_tx/active" vaddr="0x2001c000" perms="rw" />
+            <irq irq="48" id="0" trigger="edge" />
+        </protection_domain>
+        <protection_domain name="net_virt_tx" id="3" priority="100" budget="20000" cpu="0">
+            <program_image path="network_virt_tx.elf" />
+            <map mr="virtio_mmio@a000000/net/queue/ethernet_driver/net_virt_tx/free" vaddr="0x20000000" perms="rw" />
+            <map mr="virtio_mmio@a000000/net/queue/ethernet_driver/net_virt_tx/active" vaddr="0x20005000" perms="rw" />
+            <map mr="virtio_mmio@a000000/net/queue/net_virt_tx/client0/free" vaddr="0x2000a000" perms="rw" />
+            <map mr="virtio_mmio@a000000/net/queue/net_virt_tx/client0/active" vaddr="0x2000d000" perms="rw" />
+            <map mr="virtio_mmio@a000000/net/tx/data/client/client0" vaddr="0x20010000" perms="r" />
+            <map mr="virtio_mmio@a000000/net/queue/net_virt_tx/client1/free" vaddr="0x20110000" perms="rw" />
+            <map mr="virtio_mmio@a000000/net/queue/net_virt_tx/client1/active" vaddr="0x20113000" perms="rw" />
+            <map mr="virtio_mmio@a000000/net/tx/data/client/client1" vaddr="0x20116000" perms="r" />
+        </protection_domain>
+        <protection_domain name="net_virt_rx" id="4" priority="99" cpu="0">
+            <program_image path="network_virt_rx.elf" />
+            <map mr="virtio_mmio@a000000/net/queue/ethernet_driver/net_virt_rx/free" vaddr="0x20000000" perms="rw" />
+            <map mr="virtio_mmio@a000000/net/queue/ethernet_driver/net_virt_rx/active" vaddr="0x20003000" perms="rw" />
+            <map mr="virtio_mmio@a000000/net/rx/data/device" vaddr="0x20006000" perms="r" />
+            <map mr="virtio_mmio@a000000/net/rx/virt_metadata" vaddr="0x20106000" perms="rw" />
+            <map mr="virtio_mmio@a000000/net/queue/net_virt_rx/client0_net_copier/free" vaddr="0x20107000" perms="rw" />
+            <map mr="virtio_mmio@a000000/net/queue/net_virt_rx/client0_net_copier/active" vaddr="0x2010a000" perms="rw" />
+            <map mr="virtio_mmio@a000000/net/queue/net_virt_rx/client1_net_copier/free" vaddr="0x2010d000" perms="rw" />
+            <map mr="virtio_mmio@a000000/net/queue/net_virt_rx/client1_net_copier/active" vaddr="0x20110000" perms="rw" />
+        </protection_domain>
+        <protection_domain name="client0" id="5" priority="97" budget="20000" cpu="0">
+            <program_image path="echo0.elf" />
+            <map mr="cycle_counters0" vaddr="0x20000000" perms="r" cached="true" />
+            <map mr="pl011@9000000/serial/queue/serial_virt_tx/client0" vaddr="0x20001000" perms="rw" />
+            <map mr="pl011@9000000/serial/data/serial_virt_tx/client0" vaddr="0x20002000" perms="rw" />
+            <map mr="virtio_mmio@a000000/net/queue/client0_net_copier/client0/free" vaddr="0x20012000" perms="rw" />
+            <map mr="virtio_mmio@a000000/net/queue/client0_net_copier/client0/active" vaddr="0x20015000" perms="rw" />
+            <map mr="virtio_mmio@a000000/net/rx/data/client/client0" vaddr="0x20018000" perms="rw" />
+            <map mr="virtio_mmio@a000000/net/queue/net_virt_tx/client0/free" vaddr="0x20118000" perms="rw" />
+            <map mr="virtio_mmio@a000000/net/queue/net_virt_tx/client0/active" vaddr="0x2011b000" perms="rw" />
+            <map mr="virtio_mmio@a000000/net/tx/data/client/client0" vaddr="0x2011e000" perms="rw" />
+            <map mr="virtio_mmio@a000000/net/lib_sddf_lwip/client0" vaddr="0x2021e000" perms="rw" />
+        </protection_domain>
+        <protection_domain name="client0_net_copier" id="6" priority="98" budget="20000" cpu="0">
+            <program_image path="network_copy0.elf" />
+            <map mr="virtio_mmio@a000000/net/queue/net_virt_rx/client0_net_copier/free" vaddr="0x20000000" perms="rw" />
+            <map mr="virtio_mmio@a000000/net/queue/net_virt_rx/client0_net_copier/active" vaddr="0x20003000" perms="rw" />
+            <map mr="virtio_mmio@a000000/net/queue/client0_net_copier/client0/free" vaddr="0x20006000" perms="rw" />
+            <map mr="virtio_mmio@a000000/net/queue/client0_net_copier/client0/active" vaddr="0x20009000" perms="rw" />
+            <map mr="virtio_mmio@a000000/net/rx/data/device" vaddr="0x2000c000" perms="rw" />
+            <map mr="virtio_mmio@a000000/net/rx/data/client/client0" vaddr="0x2010c000" perms="rw" />
+        </protection_domain>
+        <protection_domain name="client1" id="7" priority="97" budget="20000" cpu="0">
+            <program_image path="echo1.elf" />
+            <map mr="pl011@9000000/serial/queue/serial_virt_tx/client1" vaddr="0x20000000" perms="rw" />
+            <map mr="pl011@9000000/serial/data/serial_virt_tx/client1" vaddr="0x20001000" perms="rw" />
+            <map mr="virtio_mmio@a000000/net/queue/client1_net_copier/client1/free" vaddr="0x20011000" perms="rw" />
+            <map mr="virtio_mmio@a000000/net/queue/client1_net_copier/client1/active" vaddr="0x20014000" perms="rw" />
+            <map mr="virtio_mmio@a000000/net/rx/data/client/client1" vaddr="0x20017000" perms="rw" />
+            <map mr="virtio_mmio@a000000/net/queue/net_virt_tx/client1/free" vaddr="0x20117000" perms="rw" />
+            <map mr="virtio_mmio@a000000/net/queue/net_virt_tx/client1/active" vaddr="0x2011a000" perms="rw" />
+            <map mr="virtio_mmio@a000000/net/tx/data/client/client1" vaddr="0x2011d000" perms="rw" />
+            <map mr="virtio_mmio@a000000/net/lib_sddf_lwip/client1" vaddr="0x2021d000" perms="rw" />
+        </protection_domain>
+        <protection_domain name="client1_net_copier" id="8" priority="98" budget="20000" cpu="0">
+            <program_image path="network_copy0.elf" />
+            <map mr="virtio_mmio@a000000/net/queue/net_virt_rx/client1_net_copier/free" vaddr="0x20000000" perms="rw" />
+            <map mr="virtio_mmio@a000000/net/queue/net_virt_rx/client1_net_copier/active" vaddr="0x20003000" perms="rw" />
+            <map mr="virtio_mmio@a000000/net/queue/client1_net_copier/client1/free" vaddr="0x20006000" perms="rw" />
+            <map mr="virtio_mmio@a000000/net/queue/client1_net_copier/client1/active" vaddr="0x20009000" perms="rw" />
+            <map mr="virtio_mmio@a000000/net/rx/data/device" vaddr="0x2000c000" perms="rw" />
+            <map mr="virtio_mmio@a000000/net/rx/data/client/client1" vaddr="0x2010c000" perms="rw" />
+        </protection_domain>
+        <protection_domain name="timer_driver" id="9" priority="102" passive="true" cpu="0">
+            <program_image path="timer_driver.elf" />
+            <irq irq="30" id="0" trigger="level" />
+        </protection_domain>
+    </protection_domain>
+    <channel>
+        <end pd="bench_idle0" id="0" />
+        <end pd="bench0" id="0" />
+    </channel>
+    <channel>
+        <end pd="client0" id="0" />
+        <end pd="bench0" id="1" />
+    </channel>
+    <channel>
+        <end pd="client0" id="1" />
+        <end pd="bench0" id="2" />
+    </channel>
+    <channel>
+        <end pd="serial_driver" id="1" />
+        <end pd="serial_virt_tx" id="0" />
+    </channel>
+    <channel>
+        <end pd="serial_virt_tx" id="1" />
+        <end pd="client0" id="2" />
+    </channel>
+    <channel>
+        <end pd="serial_virt_tx" id="2" />
+        <end pd="client1" id="0" />
+    </channel>
+    <channel>
+        <end pd="serial_virt_tx" id="3" />
+        <end pd="bench0" id="3" />
+    </channel>
+    <channel>
+        <end pd="ethernet_driver" id="1" />
+        <end pd="net_virt_rx" id="0" />
+    </channel>
+    <channel>
+        <end pd="ethernet_driver" id="2" />
+        <end pd="net_virt_tx" id="0" />
+    </channel>
+    <channel>
+        <end pd="net_virt_rx" id="1" />
+        <end pd="client0_net_copier" id="0" />
+    </channel>
+    <channel>
+        <end pd="client0_net_copier" id="1" />
+        <end pd="client0" id="3" />
+    </channel>
+    <channel>
+        <end pd="net_virt_tx" id="1" />
+        <end pd="client0" id="4" />
+    </channel>
+    <channel>
+        <end pd="net_virt_rx" id="2" />
+        <end pd="client1_net_copier" id="0" />
+    </channel>
+    <channel>
+        <end pd="client1_net_copier" id="1" />
+        <end pd="client1" id="1" />
+    </channel>
+    <channel>
+        <end pd="net_virt_tx" id="2" />
+        <end pd="client1" id="2" />
+    </channel>
+    <channel>
+        <end pd="timer_driver" id="1" />
+        <end pd="client0" id="5" notify="false" pp="true" />
+    </channel>
+    <channel>
+        <end pd="timer_driver" id="2" />
+        <end pd="client1" id="3" notify="false" pp="true" />
+    </channel>
+</system>
